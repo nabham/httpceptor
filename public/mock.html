@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Mocker</title>
+  <link rel="stylesheet" type="text/css" href="/css/index.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/socket.io.js"></script>
+  <script>
+    var currLocation = window.location.href;
+    var endPointId = currLocation.split('/main/')[1].split('/')[0];
+    window.endPointId = endPointId;
+    let socket = io('http://localhost:8080', {
+      query: 'endPoint=' + endPointId
+    });
+    socket.on('message', socketHandler);
+  </script>
+</head>
+
+<body>
+  <div id="modal1" class="modal">
+    <div class="modal-content">
+      <h5>Edit rules</h5>
+      <div class="row" id="rule-list-panel">
+        <ul class="collection" onclick="handleEditRule(event)">
+        </ul>
+        <button onclick="handleCreateRule()" class="btn">Create Rule</button>
+      </div>
+      <div class="row" id="rule-edit-panel">
+        <div class="input-field col s6">
+          <select id="rule_method">
+            <option value="GET" selected>GET</option>
+            <option value="POST">POST</option>
+            <option value="DELETE">DELETE</option>
+            <option value="PUT">PUT</option>
+          </select>
+          <label>Method</label>
+        </div>
+
+
+        <div class="input-field col s6">
+          <input id="rule_path" type="text" class="validate">
+          <label for="rule_path">Request path</label>
+        </div>
+
+        <div class="input-field col s6">
+          <input id="rule_code" placeholder="200" type="text" class="validate">
+          <label for="rule_code">Response code</label>
+        </div>
+
+        <div class="input-field col s6">
+          <input id="rule_delay" placeholder="0" type="text" class="validate">
+          <label for="rule_delay">Delay (in sec)</label>
+        </div>
+
+        <div class="input-field col s12">
+          <textarea id="rule_body" class="materialize-textarea" style="min-height: 100px;"></textarea>
+          <label for="rule_body">Response body</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <a href="#!" class="modal-close waves-effect waves-green btn-flat">Cancel</a>
+      <button class="modal-close waves-effect waves-green btn-flat" onclick="saveConfig();">Save</button>
+    </div>
+  </div>
+
+  <div class="header">
+    <nav class="black">
+      <div class="nav-wrapper">
+        <ul class="right hide-on-med-and-down">
+          <li><a href="/">Home</a></li>
+          <li><a href="#">NPM</a></li>
+          <li><a href="#">Github</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <div class="row main-content no-bottom">
+    <div class="col s12 main-description">
+      <h4>Httpceptor</h4>
+      <div>HTTP mocking server</div>
+      <br>
+      <div>HTTP response will be logged realtime. You can configure mocking, supports code and response.</div>
+    </div>
+    <div class="col s12 main-config">
+      <div class="col s11 offset-s1">
+        <button data-target="modal1" class="btn modal-trigger green darken-1" onclick="toggleRulePanel()">Mocking rules</button>
+      </div>
+    </div>
+    <div class="col s12 main-endpoint">
+      <h5 id="empty-container" class="text-grey">No HTTP mocked yet</h5>
+      <ul class="col s10 offset-s1 collapsible updates" id="main-container">
+      </ul>
+    </div>
+  </div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      getAllEndpoints();
+      var collapsibleElems = document.querySelectorAll('.collapsible');
+      var modalElems = document.querySelectorAll('.modal');
+      var selectElems = document.querySelectorAll('select');
+      var modelInstance = M.Modal.init(modalElems, {});
+      M.Collapsible.init(collapsibleElems, { accordion: false });
+      M.FormSelect.init(selectElems, {});
+    });
+  </script>
+</body>
+
+
+</html>

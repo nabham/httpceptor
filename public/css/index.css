@@ -1,0 +1,130 @@
+.header {
+  height: 50px;
+  background-color: #1f1e1e;
+  position: absolute;
+  top:0;
+  left:0;
+  width: 100%;
+}
+
+.header > nav {
+  line-height: 50px;
+}
+
+nav ul {
+  margin-right: 10% !important;
+}
+
+nav ul > li {
+  margin-right: 10px
+}
+
+.main-content {
+  top: 50px;
+  position: relative;
+}
+
+.main-description {
+  color: white;
+  text-align: center;
+  background-color: #1b5e20;
+  padding: 0px 10px 30px 10px !important;
+  height: 165px;
+}
+
+.main-endpoint {
+  min-height: calc(100vh - 215px) !important;
+  background-color: #eeeeee;
+}
+
+.main-config{
+  background-color: #eeeeee;
+  border-bottom: 1px solid #dddddd;
+}
+
+.create-endpoint{
+  padding: 10px 20px 20px 20px !important;
+  margin-top: 50px;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.response-card {
+  display: flex !important;
+  justify-content: space-between;
+}
+
+.update-resp {
+  display: flex !important;
+  flex-direction: column;
+}
+
+.update-resp .response-card > div {
+  padding: 0px;
+  width: 45%;
+}
+
+.response-card > pre {
+  width: 45%;
+  background-color: #ddd;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.updates {
+  background-color: transparent;
+  border: 0px !important;
+  box-shadow: none !important;
+}
+
+.updates > li {
+  box-shadow: 0px 0px 5px -2px;
+  margin: 20px;
+  border: 0px;
+}
+
+.response-code {
+  padding: 5px 10px 5px 10px;
+  box-sizing: border-box;
+  color: white;
+  font-weight: 600;
+}
+
+.bg-green {
+  background-color: green;
+}
+
+.bg-red {
+  background-color: darkred;
+}
+
+.bg-darkgray {
+  background-color: darkslategray;
+}
+
+.bg-bluegrey {
+  background-color: #455a64;
+}
+
+.pad-10 {
+  padding: 10px !important;
+}
+
+.pad-15 {
+  padding: 15px !important;
+}
+
+.no-bottom {
+  padding-bottom:0px !important;
+  margin-bottom: 0px !important;
+}
+
+.modal { width: 75% !important ; height: 75% !important ; }
+
+#empty-container{
+  text-align: center;
+  margin-top:100px;
+}
