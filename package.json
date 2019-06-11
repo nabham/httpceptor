@@ -1,5 +1,5 @@
 {
-  "name": "restmocker",
+  "name": "httpceptor",
   "version": "1.0.0",
   "description": "HTTP mock server",
   "main": "server.js",

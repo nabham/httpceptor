@@ -1,2 +1,2 @@
-# REST Mocker
+# httpceptor
 HTTP mocking server
