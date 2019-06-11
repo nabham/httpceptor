@@ -3,23 +3,20 @@
   const defaultResponse = () => {
     return {
       code: 200,
-      response: 'PONG'
+      response: 'PONG',
+      delay: 0
     }
   }
 
   const newEndpoint = () => {
     return {
-      '/': {
-        'GET': defaultResponse(),
-        'POST': defaultResponse(),
-        'PUT': defaultResponse(),
-        'DELETE': defaultResponse()
-      }
+      '/:GET': defaultResponse()
     }
   }
 
   module.exports = {
-    newEndpoint
+    newEndpoint,
+    defaultResponse
   };
 
 })();

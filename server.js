@@ -10,6 +10,7 @@ const bodyParser = require('body-parser');
 
 const debugInfo = debug('info');
 
+const config = require('./config.json');
 const controller = require('./src/controller');
 const sockets = require('./src/sockets/handler');
 
@@ -27,7 +28,7 @@ app.get('/', (req, res) => {
 
 app.get('/main/:endpoint', (req, res) => {
   controller.checkEndpoint(req, (err) => {
-    console.error(err);
+    // console.error(err);
     if(!err) {
       return res.sendFile(path.join(__dirname, 'public', '404.html'));
     }
@@ -99,10 +100,6 @@ io.on('connection', (socket) => {
   sockets.socketHandler(socket);
 });
 
-server.listen(8080, () => {
-  debugInfo('Server started at 8000');
+server.listen(config.server.port, () => {
+  debugInfo('Server started at port', config.server.port);
 });
-
-// setInterval(() => {
-//   console.log(process.memoryUsage());
-// }, 10000);

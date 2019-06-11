@@ -15,8 +15,20 @@
     return query;
   }
 
+  const toJSON = (str, fallback) => {
+
+    try {
+      const parseVal = JSON.parse(str);
+      return parseVal || fallback || str;
+    } catch (error) {
+      console.log('parsing failed');
+      return fallback || str;
+    }
+  }
+
   module.exports = {
-    parseQueryParams
+    parseQueryParams,
+    toJSON
   }
 
 })();

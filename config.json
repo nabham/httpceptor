@@ -1,0 +1,11 @@
+{
+  "store": "local",
+  "redisConn": {
+    "host": "localhost",
+    "port": 6379,
+    "db": 1
+  },
+  "server": {
+    "port": 8999
+  }
+}

@@ -1,18 +1,29 @@
 {
-  "name": "mocker",
+  "name": "restmocker",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "HTTP mock server",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "DEBUG=info,warn,error nodemon server.js"
+    "start": "node server.js",
+    "start-debug": "DEBUG=info,warn,error node server.js",
+    "start-dev": "DEBUG=info,warn,error nodemon server.js"
   },
-  "author": "",
-  "license": "ISC",
+  "author": {
+    "name": "Nabham",
+    "email": "nabhambansal@gmail.com"
+  },
+  "keywords": [
+    "restmocker",
+    "mock",
+    "http mock",
+    "rest mock"
+  ],
+  "license": "MIT",
   "dependencies": {
     "body-parser": "^1.19.0",
     "debug": "^4.1.1",
     "express": "^4.17.0",
+    "redis": "^2.8.0",
     "socket.io": "^2.2.0"
   },
   "devDependencies": {

@@ -1,7 +1,12 @@
 (function () {
 
   const mockUtils = require('./utils/mock');
+  const commonUtils = require('./utils/common');
   const sendUpdate = require('./sockets/handler').sendUpdate;
+  const debug = require('debug');
+
+  const [debugError, debugInfo, debugWarn] = [debug('error'), debug('info'), debug('warn')];
+
   let store;
 
   const initialize = (type) => {
@@ -11,60 +16,59 @@
 
   const handleCreateReq = (req, callback) => {
     const endPoint = req.body.endpoint;
-    // console.log(store);
-    store.has(endPoint)
+    store.get(undefined, endPoint)
       .then(exists => {
         if (exists) {
-          // console.error(exists); v
+          // debugError(exists); v
           return callback({ code: 400, message: 'Already exists' });
         }
 
-        return store.add(endPoint, mockUtils.newEndpoint())
+        return store.add(endPoint, '/:GET', mockUtils.defaultResponse())
           .then((resp) => {
-            // console.log('resp', resp);
             callback(null);
           });
 
       })
       .catch(err => {
-        console.error('error occured', err);
+        debugError('error occured', err);
         callback({ code: 500, message: err });
       });
   };
 
   const handleMock = (req, callback) => {
-    const endPoint = req.params.endpoint;
-    store.get(endPoint)
+
+    const endPoint = req.params.endpoint,
+      method = req.method.toUpperCase(),
+      path = '/' + req.params[0];
+
+    store.get(endPoint, `${path}:${method}`)
       .then(config => {
 
+        if (typeof (config) === 'string') {
+          config = commonUtils.toJSON(config);
+        }
+
         if (!config) {
-          console.error(config);
+          debugWarn(config);
           return callback({ code: 404, message: 'Endpoint does not exists' });
         }
 
-        const method = req.method.toUpperCase();
-        const path = '/' + req.params[0];
-
-        const respObj = (config[path] && config[path][method]) || {};
-
-        if (Object.keys(respObj).length === 0) {
-          console.log('No config found');
+        if (Object.keys(config).length === 0) {
+          debugInfo('No config found');
           return Promise.reject('No config found for path', path);
         }
 
-        // console.log(req.body);
-
-        const code = respObj.code || 200;
-        const response = respObj.response || 'PONG';
+        const code = config.code || 200;
+        const response = config.response || 'PONG';
 
         setTimeout(() => {
-          sendUpdate(endPoint, { code, response, method, headers: req.body || {}, path });
+          sendUpdate(endPoint, { code, response, method, body: req.body || {}, path });
           callback(null, { code, response });
-        }, (respObj.delay * 1000) || 0);
+        }, (config.delay * 1000) || 0);
 
       })
       .catch(err => {
-        console.error('error occured', err);
+        debugError('error occured', err);
         callback({ code: 500, message: err });
       });
   }
@@ -73,28 +77,12 @@
     const { method, path, code, delay, body } = req.body;
     const endPoint = req.params.endpoint;
 
-    store.get(endPoint)
-      .then(config => {
-
-        if (!config[path]) {
-          config[path] = {};
-        }
-
-        config[path][method] = {
-          code,
-          response: body,
-          delay
-        };
-
-        return store.add(endPoint, config)
-          .then((resp) => {
-            // console.log('resp', resp);
-            callback(null);
-          });
-
+    store.edit(endPoint, `${path}:${method}`, { code, response: body, delay })
+      .then(() => {
+        callback(null);
       })
       .catch(err => {
-        console.error('error occured', err);
+        debugError('error occured', err);
         callback({ code: 500, message: err });
       });;
   }
@@ -102,12 +90,12 @@
   const handleGetRules = (req, callback) => {
     const endPoint = req.params.endpoint;
 
-    store.get(endPoint)
+    store.getAll(endPoint)
       .then(config => {
         callback(null, config);
       })
       .catch(err => {
-        console.error('error occured', err);
+        debugError('error occured', err);
         callback({ code: 500, message: err });
       });
   }
@@ -115,7 +103,7 @@
   const checkEndpoint = (req, callback) => {
     const endPoint = req.params.endpoint;
     // console.log(endPoint);
-    store.has(endPoint)
+    store.getAll(endPoint)
       .then(exists => {
         callback(exists);
       })

@@ -115,7 +115,7 @@ function socketHandler(message) {
         <div>Response</div>
       </div>
       <div class="response-card">
-        <pre>${JSON.stringify(message.headers)}</pre>
+        <pre>${JSON.stringify(message.body)}</pre>
         <pre>${message.response}</pre>
       </div>
     </div>
@@ -177,13 +177,16 @@ function createRulesList(rulesObj) {
 
   let listStr = '';
 
-  Object.keys(rulesObj || {}).forEach(path => {
-    const methodObj = rulesObj[path];
+  Object.keys(rulesObj || {}).forEach(pathStr => {
 
-    Object.keys(methodObj).forEach(method => {
-      // const ruleObj = methodObj[method];
-      listStr += `<li class="collection-item" id="${path}:${method}">${method} ${path}</li>`
-    });
+    const [path, method] = pathStr.split(':');
+
+    // const configObj = rulesObj[pathStr];
+    listStr += `<li class="collection-item" id="${path}:${method}">${method} ${path}</li>`
+    // Object.keys(configObj).forEach(method => {
+    //   // const ruleObj = methodObj[method];
+      
+    // });
   });
 
   getDOMElement('rule-list-panel').children[0].innerHTML = listStr;
@@ -199,6 +202,8 @@ function handleCreateRule() {
   getDOMElement('rule_delay').value = 0;
   getDOMElement('rule_body').value = 'PONG';
 
+  setFieldsActive();
+
   getDOMElement('rule-list-panel').style.display = 'none';
   getDOMElement('rule-edit-panel').style.display = 'block';
 }
@@ -210,17 +215,14 @@ function toggleRulePanel() {
 
 
 function handleEditRule(event) {
-  console.log(event);
+  // console.log(event);
   getDOMElement('rule-list-panel').style.display = 'none';
   getDOMElement('rule-edit-panel').style.display = 'block';
   const [path, method] = event.target.id.split(':');
 
-  let obj = appState.rules[path][method];
+  let obj = appState.rules[event.target.id];
 
-  getDOMElement('rule_body').nextElementSibling.className = 'active';
-  getDOMElement('rule_path').nextElementSibling.className = 'active';
-  getDOMElement('rule_code').nextElementSibling.className = 'active';
-  getDOMElement('rule_delay').nextElementSibling.className = 'active';
+  setFieldsActive();
 
   getDOMElement('rule_method').value = method;
   getDOMElement('rule_path').value = path;
@@ -228,4 +230,11 @@ function handleEditRule(event) {
   getDOMElement('rule_delay').value = obj.delay || 0;
   getDOMElement('rule_body').value = obj.response || 'PONG';
 
+}
+
+function setFieldsActive() {
+  getDOMElement('rule_body').nextElementSibling.className = 'active';
+  getDOMElement('rule_path').nextElementSibling.className = 'active';
+  getDOMElement('rule_code').nextElementSibling.className = 'active';
+  getDOMElement('rule_delay').nextElementSibling.className = 'active';
 }
